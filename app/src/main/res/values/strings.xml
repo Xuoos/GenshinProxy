@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Proxy</string>
+    <string name="welcomeMessage">欢迎进入自定义IP客户端~</string>
+    <string name="Save">💾保存地址</string>
+    <string name="CustomServer">🌐自定义服务器</string>
+    <string name="OfficialServer">官方服务器</string>
+    <string name="SelectServer">自定义IP客户端</string>
+    <string name="Tips">点击“⚙️代理设置”以设置服务器地址\n\n倒卖的骨灰都给你妈扬咯🐒</string>
+    <string name="ForcedMode">强制替换全部域名 (需重启)</string>
+    <string name="ServerAddressError">服务器地址错误</string>
+    <string name="ProxyList">只代理列表内的地址 (需重启)</string>
+    <string name="EnableTools">启用悬浮球工具</string>
+    <string name="HookConfig">Hook 配置文件? (需重启)</string>
+    <string name="Tips2">⚠️在登录界面不要用手机号登录！\n🎮游玩本地服请在下方输入: 127.0.0.1:54321\n⌨️请输入服务器地址:</string>
+    <string name="Back">🔙返回</string>
+    <string name="ExitGames">🚫退出游戏</string>
+    <string name="Settings">⚙️代理设置</string>
+    <string name="KeepSSL">跳过SSL证书检查(需重启客户端)</string>
+    <string name="CheckServerStatus">(点击检查服务器状态)</string>
+    <string name="ServerStatus">"服务器状态: "</string>
+    <string name="NotInstall"> 未安装</string>
+    <string name="GetServerStatusError">获取服务器状态错误.</string>
+    <string name="InputSwitch">输入开关</string>
+    <string name="Login">登录</string>
+    <string name="Password">密码:</string>
+    <string name="User">用户:</string>
+    <string name="LoginSuccess">登录成功. 复制令牌:</string>
+    <string name="LoginFailed">登录失败.</string>
+    <string name="LoginError">登录错误.</string>
+    <string name="Tools">工具</string>
+    <string name="JoinServerError">强制代理或代理列表已启用, 无法进入正式服务器.</string>
+    <string name="OpenWebview">打开内置浏览器</string>
+</resources>
