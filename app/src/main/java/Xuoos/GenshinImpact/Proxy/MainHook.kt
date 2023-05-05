@@ -3,9 +3,7 @@ package Xuoos.GenshinImpact.Proxy
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-//import com.github.megatronking.stringfog.annotation.StringFogIgnore
 
-//@StringFogIgnore
 class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     private val hook: Hook = Hook()
 

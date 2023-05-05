@@ -67,7 +67,6 @@ import java.util.regex.Pattern
 import javax.net.ssl.*
 import kotlin.system.exitProcess
 import java.io.IOException
-//import com.github.megatronking.stringfog.annotation.StringFogIgnore
 
 class Hook {
 
