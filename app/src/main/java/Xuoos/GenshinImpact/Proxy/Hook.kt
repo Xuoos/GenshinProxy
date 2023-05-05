@@ -425,6 +425,7 @@ class Hook {
                   setPadding(25, 0, 25, 0)
                   addView(LinearLayout(activity).apply {
                       orientation = LinearLayout.VERTICAL
+                      //提供此开关，防止误报无限连接至资源下载服务器
                       addView(Switch(activity).apply {
                           text = "游戏数据检测 (需重启)"
                           isChecked = sp.getBoolean("ResCheck", false)
@@ -527,11 +528,11 @@ setNegativeButton 右中
                    CustomIPDialog()
                  } else {
                      sp.edit().run {
-                          putString("serverip", SaveIP)
-                          apply()
-                          val ser_ip = sp.getString("serverip", "") ?: ""
-                          Toast.makeText(activity, "已保存地址:\t${ser_ip}", Toast.LENGTH_SHORT).show()
-                          Toast.makeText(activity, "请重新打开客户端~", Toast.LENGTH_SHORT).show()
+                        putString("serverip", SaveIP)
+                        apply()
+                        val ser_ip = sp.getString("serverip", "") ?: ""
+                        Toast.makeText(activity, "已保存地址:\t${ser_ip}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activity, "请重新打开客户端~", Toast.LENGTH_SHORT).show()
                      Thread.sleep(500)
                      exitProcess(0)
                      }
@@ -693,8 +694,6 @@ setNegativeButton 右中
         if (method.args[args] == null) return
         if (Xuoos.startsWith("autopatchhk.yuanshen.com")) return
         if (Xuoos.startsWith("autopatchcn.yuanshen.com")) return
-        // 跳过配置设置 (不可用)skip config areal (BAD 3.5)
-        //if (Xuoos.startsWith("[{\"area\":")) return
 
         for (list in more_domain) {
             for (head in arrayListOf("http://", "https://")) {
