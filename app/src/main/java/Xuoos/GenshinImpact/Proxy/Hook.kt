@@ -76,6 +76,7 @@ class Hook {
     private lateinit var SaveIP: String
     private lateinit var modulePath: String
     private lateinit var dialog: LinearLayout
+    private lateinit var PackageName: String
     private lateinit var sp: SharedPreferences
     private lateinit var moduleRes: XModuleResources
     private lateinit var windowManager: WindowManager
@@ -85,7 +86,7 @@ class Hook {
     private val more_domain =
             arrayListOf(
              "overseauspider.yuanshen.com:8888",
-             "uspider.yuanshen.com:8888"
+             "uspider.yuanshen.com:8888" //加不加都一样?
             )
     
     private val activityList: ArrayList<Activity> = arrayListOf()
@@ -147,7 +148,8 @@ class Hook {
     @SuppressLint("WrongConstant", "ClickableViewAccessibility")
     fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
 
-        if (lpparam.packageName != "com.miHoYo.YuanShenPS") return
+      if (lpparam.packageName == "com.miHoYo.GenshinImpact" || lpparam.packageName == "com.miHoYo.Yuanshen" || lpparam.packageName == "com.miHoYo.C.GenshinProxy" || lpparam.packageName == "com.miHoYo.YuanShenPS" || lpparam.packageName == "com.miHoYo.Yuanshen.Proxy") {
+        PackageName = lpparam.packageName
         EzXHelperInit.initHandleLoadPackage(lpparam)
 
         fun getFolderSize(folderPath: String): Long {
@@ -162,7 +164,7 @@ class Hook {
            return totalSize
         }
 
-        val folderPath = "/storage/emulated/0/Android/data/com.miHoYo.YuanShenPS"
+        val folderPath = "/storage/emulated/0/Android/data/${PackageName}"
         val folderSize = getFolderSize(folderPath)
         var size = "无法获取"
         var unit = ""
@@ -180,6 +182,7 @@ class Hook {
                size = String.format("%.2f", folderSize.toFloat() / (1024 * 1024 * 1024))
                unit = "GB"
            }
+         if (size == "0") size = "无法获取"
          SizeError = true
         }
 
@@ -195,7 +198,7 @@ class Hook {
             }
               if (sp.getBoolean("ResCheck", true)) {
                  if (SizeError == true) {
-                    server = "https://sdk.mihoyu.cn"
+                    server = "https://sdk.mihoyu.cn" //@咕咕 mihoyu.cn
                  }
               }
         }
@@ -213,16 +216,11 @@ class Hook {
 
             Permission_test()
             if (sp.getBoolean("AutoDelCache", false)) AutoDelCache()
-            if (sp.getBoolean("AtDelLl2cppFolder", false)) AtDelLl2cppFolder()
+            if (sp.getBoolean("AtDelLl2cppFolder", false)) AutoDelLl2cppFolder()
 
               if (sp.getBoolean("ResCheck", true)) {
                  if (SizeError == true) {
-                 val sb_size = StringBuilder()
-                 sb_size.append("客户端无数据/数据不完整，大小:\t")
-                 sb_size.append(size)
-                 sb_size.append(unit)
-                 val sizewaring = sb_size.toString()
-                 Toast.makeText(activity, sizewaring, Toast.LENGTH_SHORT).show()
+                 Toast.makeText(activity, "客户端无数据/数据不完整，大小:\t${size}${unit}", Toast.LENGTH_SHORT).show()
                  Toast.makeText(activity, "自动进入资源下载服务器...", Toast.LENGTH_SHORT).show()
                  }
               }
@@ -245,7 +243,7 @@ class Hook {
                 }
                 //setPadding(10, 10, 10, 10) //距离
                 setTextColor(Color.RED) //文字(标题)颜色
-                setGravity(Gravity.CENTER) //文本与文本之间位置
+                setGravity(Gravity.CENTER)
                   setOnClickListener {
                     showDialog()
                   }
@@ -258,13 +256,13 @@ class Hook {
             y = 0
           })
 
-    fun runOnMainThread(action: () -> Unit) {
-        Handler(Looper.getMainLooper()).post(action)
-    }
+        fun runOnMainThread(action: () -> Unit) {
+            Handler(Looper.getMainLooper()).post(action)
+        }
 
      // 随机颜色
-     fun getRainbowColor(): Int {
-        val rainbowColors = intArrayOf(
+         fun getRainbowColor(): Int {
+            val rainbowColors = intArrayOf(
             Color.parseColor("#FF8C00"), // 橙色
             Color.parseColor("#FFFF00"), // 黄色
             Color.parseColor("#008000"), // 绿色
@@ -274,10 +272,10 @@ class Hook {
             Color.parseColor("#800000"), // 栗色
             Color.parseColor("#808000"), // 橄榄色
             Color.parseColor("#00FFFF")  // 青色
-        )
-     val random = Random()
-     return rainbowColors[random.nextInt(rainbowColors.size)]
-    }
+            )
+         val random = Random()
+         return rainbowColors[random.nextInt(rainbowColors.size)]
+        }
 
           var ShowIP = server
           if (ShowIP == "") {
@@ -287,7 +285,7 @@ class Hook {
           val sb = StringBuilder()
           sb.append("点我打开代理设置\n")
           sb.append("目标服务器:\n")
-          val startIndex = sb.length // 记录 ip 开始的位置
+          val startIndex = sb.length // 记录 showip 开始的位置
           sb.append(ShowIP)
           val originalString = sb.toString()
 
@@ -305,22 +303,23 @@ class Hook {
                 dialog.visibility = View.VISIBLE
                }
             }
-            Thread.sleep(8000) //显示时长
+            Thread.sleep(8000) //显示时长 1000=1s
              runOnMainThread {
                 dialog.visibility = View.GONE
                 activity.windowManager.removeView(dialog)
              }
           }.start()
         }
+      }
     }
 
     private fun AutoDelCache() {
        try {
-         val cachePath = File("/sdcard/Android/data/com.miHoYo.YuanShenPS/cache")
-         val cache1Path = File("/sdcard/Android/data/com.miHoYo.YuanShenPS/files/gee_logger_cache")
-         val cache2Path = File("/data/data/com.miHoYo.YuanShenPS/code_cache")
-         val cache3Path = File("/data/data/com.miHoYo.YuanShenPS/cache/WebView")
-         val cache4Path = File("/data/data/com.miHoYo.YuanShenPS/app_webview/Default/GPUCache")
+         val cachePath = File("/sdcard/Android/data/${PackageName}/cache")
+         val cache1Path = File("/sdcard/Android/data/${PackageName}/files/gee_logger_cache")
+         val cache2Path = File("/data/data/${PackageName}/code_cache")
+         val cache3Path = File("/data/data/${PackageName}/cache/WebView")
+         val cache4Path = File("/data/data/${PackageName}/app_webview/Default/GPUCache")
             if (cachePath.exists()) {
                cachePath.deleteRecursively()
             }
@@ -459,7 +458,7 @@ class Hook {
                   })
               })
               setPositiveButton("关闭") { _, _ ->
-                  // none
+                  // 无
               }
               setNegativeButton("修改服务器地址") { _, _ ->
                   IPDialog()
@@ -497,17 +496,13 @@ setNegativeButton 右中
                                @SuppressLint("CommitPrefEdits")
                                override fun afterTextChanged(p0: Editable) {
                                  val import_ip = p0.toString()
-                                 val sb = StringBuilder()
-                                 sb.append("https://")
-                                 sb.append(import_ip)
-                                 val originalString = sb.toString()
                                   sp.edit().run {
                                     if (import_ip == "") {
                                       SaveIP = ""
                                     } else if (import_ip == "localhost" || import_ip == "127.0.0.1") {
                                       SaveIP = "https://127.0.0.1:54321"
                                     } else if (!import_ip.startsWith("https://") && !import_ip.startsWith("http://")) {
-                                      SaveIP = originalString
+                                      SaveIP = "https://" + import_ip
                                     } else {
                                       SaveIP = import_ip
                                     }
@@ -528,17 +523,14 @@ setNegativeButton 右中
                    CustomIPDialog()
                  } else if (SaveIP.endsWith("/")) {
                    Toast.makeText(activity, "错误: 地址结尾不能有“/”！", Toast.LENGTH_SHORT).show()
+                   SaveIP = "" //赋予变量为空，防止saveip仍然为空时还报错这个
                    CustomIPDialog()
                  } else {
                      sp.edit().run {
                           putString("serverip", SaveIP)
                           apply()
-                          val ser_ip = sp.getString("serverip", "") ?: ""  
-                          val sb = StringBuilder()
-                          sb.append("已保存地址:\t")
-                          sb.append(ser_ip)
-                          val originalString = sb.toString()
-                          Toast.makeText(activity, originalString, Toast.LENGTH_SHORT).show()
+                          val ser_ip = sp.getString("serverip", "") ?: ""
+                          Toast.makeText(activity, "已保存地址:\t${ser_ip}", Toast.LENGTH_SHORT).show()
                           Toast.makeText(activity, "请重新打开客户端~", Toast.LENGTH_SHORT).show()
                      Thread.sleep(500)
                      exitProcess(0)
@@ -551,17 +543,16 @@ setNegativeButton 右中
     //自动删除il2cpp
     private fun AutoDelLl2cppFolder() {
        try {
-        val il2cppPath = File("/sdcard/Android/data/com.miHoYo.YuanShenPS/files/il2cpp")
-          if (startAtDelLl2cppFolder) {
-              if (il2cppPath.exists()) {
-                 il2cppPath.deleteRecursively()
-              }
-          }
+        val il2cppPath = File("/sdcard/Android/data/${PackageName}/files/il2cpp")
+            if (il2cppPath.exists()) {
+               il2cppPath.deleteRecursively()
+            }
        } catch (e: IOException) {
               Toast.makeText(activity, "删除il2cpp文件夹时发生错误", Toast.LENGTH_LONG).show()
        }
     }
 
+    //copy from yuuki
     private fun SSLHook() {
         // OkHttp3 Hook
         findMethodOrNull("com.combosdk.lib.third.okhttp3.OkHttpClient\$Builder") { name == "build" }
@@ -671,9 +662,9 @@ setNegativeButton 右中
     //检测数据是否可读
     private fun Permission_test() {
        try {
-          val file = File("/sdcard/Android/data/com.miHoYo.YuanShenPS/files/AssetBundles/blocks/test.txt")
-          val folder = File("/sdcard/Android/data/com.miHoYo.YuanShenPS/files/AssetBundles")
-          val folder1 = File("/sdcard/Android/data/com.miHoYo.YuanShenPS/files/AssetBundles/blocks")
+          val file = File("/sdcard/Android/data/${PackageName}/files/AssetBundles/blocks/test.txt")
+          val folder = File("/sdcard/Android/data/${PackageName}/files/AssetBundles")
+          val folder1 = File("/sdcard/Android/data/${PackageName}/files/AssetBundles/blocks")
               if (!folder.exists() && !folder.isDirectory()) {
                   folder.mkdirs()
               }
