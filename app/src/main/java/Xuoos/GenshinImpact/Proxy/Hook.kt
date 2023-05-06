@@ -7,10 +7,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.XModuleResources
-//
 import android.os.Handler
 import android.os.Looper
-
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -25,17 +23,14 @@ import android.text.style.UnderlineSpan
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-//
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.MotionEvent
-//
 import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import java.util.*
-
 import android.webkit.SslErrorHandler
 import android.widget.*
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
@@ -45,22 +40,11 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-/*
-import org.json.JSONObject
-import android.util.Base64
-*/
 import Xuoos.GenshinImpact.Proxy.Utils.dp2px
-//import GenshinProxy.Xuoos.Utils.isInit
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
-///
 import java.io.File
 import java.math.BigInteger
-/*
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-*/
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.regex.Pattern
@@ -148,7 +132,7 @@ class Hook {
     @SuppressLint("WrongConstant", "ClickableViewAccessibility")
     fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
 
-      if (lpparam.packageName == "com.miHoYo.GenshinImpact" || lpparam.packageName == "com.miHoYo.Yuanshen" || lpparam.packageName == "com.miHoYo.C.GenshinProxy" || lpparam.packageName == "com.miHoYo.YuanShenPS" || lpparam.packageName == "com.miHoYo.Yuanshen.Proxy") {
+      if (lpparam.packageName == "com.miHoYo.GenshinImpact" || lpparam.packageName == "com.miHoYo.Yuanshen" || lpparam.packageName == "com.miHoYo.YuanshenPS") {
         PackageName = lpparam.packageName
         EzXHelperInit.initHandleLoadPackage(lpparam)
 
@@ -260,7 +244,7 @@ class Hook {
             Handler(Looper.getMainLooper()).post(action)
         }
 
-     // 随机颜色
+         // 随机颜色
          fun getRainbowColor(): Int {
             val rainbowColors = intArrayOf(
             Color.parseColor("#FF8C00"), // 橙色
