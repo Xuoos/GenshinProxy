@@ -193,14 +193,9 @@ class Hook {
 
         SSLHook()
         HttpHook()
-
-        XposedHelpers.findAndHookMethod(
-            "com.unity3d.player.UnityPlayerActivity",
-            lpparam.classLoader,
-            "onPause",
-            object : XC_MethodHook() {
-                @Throws(Throwable::class)
-                override fun beforeHookedMethod(param: MethodHookParam) {
+ 
+        //hook 活动
+        findMethod("com.miHoYo.GetMobileInfo.MainActivity") { name == "onCreate" }.hookBefore { param ->
           activity = param.thisObject as Activity
 
             Permission_test()
@@ -299,15 +294,7 @@ class Hook {
              }
           }.start()
         }
-                }
-            }
-        )
-
-        /*/hook 活动
-        findMethod("com.miHoYo.GetMobileInfo.MainActivity") { name == "onCreate" }.hookBefore { param ->
-
       }
-      */
     }
 
     private fun AutoDelCache() {
