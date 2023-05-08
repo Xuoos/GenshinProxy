@@ -54,10 +54,10 @@ import java.io.IOException
 
 class Hook {
 
+    private var SaveIP = ""
     private var SizeError = false
 
     private lateinit var server: String
-    private lateinit var SaveIP: String
     private lateinit var modulePath: String
     private lateinit var dialog: LinearLayout
     private lateinit var PackageName: String
@@ -170,6 +170,9 @@ class Hook {
          SizeError = true
         }
 
+        SSLHook()
+        HttpHook()
+
         findMethod("com.combosdk.openapi.ComboApplication") { name == "attachBaseContext" }.hookBefore {
             val context = it.args[0] as Context
             sp = context.getSharedPreferences("ProxyConfig", 0)
@@ -186,13 +189,6 @@ class Hook {
                  }
               }
         }
-
-        findMethod(Activity::class.java, true) { name == "onCreate" }.hookBefore { param ->
-            activity = param.thisObject as Activity
-        }
-
-        SSLHook()
-        HttpHook()
  
         //hook 活动
         findMethod("com.miHoYo.GetMobileInfo.MainActivity") { name == "onCreate" }.hookBefore { param ->
@@ -239,10 +235,6 @@ class Hook {
             x = 0
             y = 0
           })
-
-        fun runOnMainThread(action: () -> Unit) {
-            Handler(Looper.getMainLooper()).post(action)
-        }
 
          // 随机颜色
          fun getRainbowColor(): Int {
@@ -481,19 +473,15 @@ setNegativeButton 右中
                                @SuppressLint("CommitPrefEdits")
                                override fun afterTextChanged(p0: Editable) {
                                  val import_ip = p0.toString()
-                                  sp.edit().run {
-                                    if (import_ip == "") {
-                                      SaveIP = ""
-                                    } else if (import_ip == "localhost" || import_ip == "127.0.0.1") {
-                                      SaveIP = "https://127.0.0.1:54321"
-                                    } else if (!import_ip.startsWith("https://") && !import_ip.startsWith("http://")) {
-                                      SaveIP = "https://" + import_ip
-                                    } else {
-                                      SaveIP = import_ip
-                                    }
-                                      //实时保存
-                                      //apply()
-                                  }
+                                   if (import_ip == "") {
+                                     SaveIP = ""
+                                   } else if (import_ip == "localhost" || import_ip == "127.0.0.1") {
+                                     SaveIP = "https://127.0.0.1:54321"
+                                   } else if (!import_ip.startsWith("https://") && !import_ip.startsWith("http://")) {
+                                     SaveIP = "https://" + import_ip
+                                   } else {
+                                     SaveIP = import_ip
+                                   }
                                }
                            })
                        })
@@ -508,7 +496,7 @@ setNegativeButton 右中
                    CustomIPDialog()
                  } else if (SaveIP.endsWith("/")) {
                    Toast.makeText(activity, "错误: 地址结尾不能有“/”！", Toast.LENGTH_SHORT).show()
-                   SaveIP = "" //赋予变量为空，防止saveip仍然为空时还报错这个
+                   SaveIP = ""
                    CustomIPDialog()
                  } else {
                      sp.edit().run {
