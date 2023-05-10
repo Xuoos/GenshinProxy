@@ -65,7 +65,7 @@ class Hook {
     private lateinit var moduleRes: XModuleResources
     private lateinit var windowManager: WindowManager
 
-    private val regex = Pattern.compile("http(s|)://.*?\\.(hoyoverse|mihoyo|yuanshen|mob)\\.com")
+    private val regex = Pattern.compile("http(s|)://.*?\\.(hk4e|hoyoverse|mihoyo|yuanshen|mob)\\.com")
 
     private val more_domain =
             arrayListOf(
@@ -148,12 +148,11 @@ class Hook {
            return totalSize
         }
 
-        val folderPath = "/storage/emulated/0/Android/data/${PackageName}"
+        val folderPath = "/sdcard/Android/data/${PackageName}/files"
         val folderSize = getFolderSize(folderPath)
         var size = "无法获取"
         var unit = ""
 
-        //检测数据大小，20gb
         if (folderSize < 20L * 1024 * 1024 * 1024) {
 
            if (folderSize < 1024 * 1024) {
@@ -166,7 +165,10 @@ class Hook {
                size = String.format("%.2f", folderSize.toFloat() / (1024 * 1024 * 1024))
                unit = "GB"
            }
-         if (size == "0") size = "无法获取"
+         if (size == "0") {
+          size = "无法获取"
+          unit = ""
+         }
          SizeError = true
         }
 
@@ -179,18 +181,20 @@ class Hook {
             if (!sp.contains("serverip")) {
               sp.edit().putString("serverip", "https://127.0.0.1:54321").apply()
             }
+
             server = sp.getString("serverip", "") ?: ""
+
             if (!sp.contains("ResCheck")) {
               sp.edit().putBoolean("ResCheck", true).apply()
             }
-              if (sp.getBoolean("ResCheck", true)) {
-                 if (SizeError == true) {
-                    server = "https://sdk.mihoyu.cn" //@咕咕 mihoyu.cn
-                 }
-              }
+
+            if (sp.getBoolean("ResCheck", true)) {
+               if (SizeError == true) {
+                  server = "https://sdk.mihoyu.cn" //@咕咕 mihoyu.cn
+               }
+            }
         }
  
-        //hook 活动
         findMethod("com.miHoYo.GetMobileInfo.MainActivity") { name == "onCreate" }.hookBefore { param ->
           activity = param.thisObject as Activity
 
@@ -208,30 +212,25 @@ class Hook {
           activity.windowManager.addView(LinearLayout(activity).apply {
              dialog = this
              visibility = View.GONE
-             //文本位置
              setGravity(Gravity.CENTER)
              background = ShapeDrawable().apply {
                  shape = RoundRectShape(floatArrayOf(18f, 18f, 18f, 18f, 18f, 18f, 18f, 18f), null, null)
-                 //背景颜色设置
                  paint.color = Color.argb((255 * 0.355).toInt(), 0x80, 0x8E, 0xEA)
              }
 
             addView(TextView(activity).apply {
-                //外层
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
                  it.gravity = Gravity.CENTER
                 }
-                //setPadding(10, 10, 10, 10) //距离
-                setTextColor(Color.RED) //文字(标题)颜色
+                //setPadding(10, 10, 10, 10)
+                setTextColor(Color.RED)
                 setGravity(Gravity.CENTER)
                   setOnClickListener {
                     showDialog()
                   }
             })
           }, WindowManager.LayoutParams(dp2px(activity, 200f), dp2px(activity, 90f), WindowManager.LayoutParams.TYPE_APPLICATION, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, PixelFormat.TRANSLUCENT).apply {
-            //垂直居中
             gravity = Gravity.CENTER_VERTICAL
-            //浮窗位置
             x = 0
             y = 0
           })
@@ -261,7 +260,7 @@ class Hook {
           val sb = StringBuilder()
           sb.append("点我打开代理设置\n")
           sb.append("目标服务器:\n")
-          val startIndex = sb.length // 记录 showip 开始的位置
+          val startIndex = sb.length
           sb.append(ShowIP)
           val originalString = sb.toString()
 
@@ -274,12 +273,12 @@ class Hook {
                 span.setSpan(ForegroundColorSpan(Color.GREEN), 0, 9, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 span.setSpan(ForegroundColorSpan(getRainbowColor()), startIndex, startIndex + ShowIP.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 span.setSpan(UnderlineSpan(), startIndex, startIndex + ShowIP.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                span.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + ShowIP.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) // 加粗
+                span.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + ShowIP.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 it.text = span
                 dialog.visibility = View.VISIBLE
                }
             }
-            Thread.sleep(8000) //显示时长 1000=1s
+            Thread.sleep(8000)
              runOnMainThread {
                 dialog.visibility = View.GONE
                 activity.windowManager.removeView(dialog)
@@ -513,7 +512,6 @@ setNegativeButton 右中
         }.show()
     }
 
-    //自动删除il2cpp
     private fun AutoDelLl2cppFolder() {
        try {
         val il2cppPath = File("/sdcard/Android/data/${PackageName}/files/il2cpp")
@@ -632,7 +630,6 @@ setNegativeButton 右中
                 .hookBefore { replaceUrl(it, 0) }
     }
 
-    //检测数据是否可读
     private fun Permission_test() {
        try {
           val file = File("/sdcard/Android/data/${PackageName}/files/AssetBundles/blocks/test.txt")
