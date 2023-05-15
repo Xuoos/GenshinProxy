@@ -12,7 +12,7 @@ android {
         minSdk = 28
         targetSdk = 32
         versionCode = 3
-        versionName = "1.0.4"
+        versionName = "1.0.5"
     }
 
 
@@ -55,4 +55,5 @@ dependencies {
     compileOnly("de.robv.android.xposed:api:82")
     compileOnly("de.robv.android.xposed:api:82:sources")
     implementation("com.github.kyuubiran:EzXHelper:0.9.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
 }
