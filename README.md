@@ -1,4 +1,4 @@
-# HK4E Android Proxy
+# Genshin Android Localhost Proxy
 
 ### 
  基于方块君的GenshinProxy([577fkj](https://github.com/577fkj)) 修改，部分代码来源于[Launcher-Android](https://github.com/YuukiPS/Launcher-Android)感谢[咕咕](https://github.com/xlpmyxhdr)的游戏资源下载服务器
