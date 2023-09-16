@@ -227,7 +227,6 @@ class Hook {
         findMethod("com.miHoYo.GetMobileInfo.MainActivity") { name == "onCreate" }.hookBefore { param ->
           activity = param.thisObject as Activity
 
-            Permission_test()
             if (sp.getBoolean("AutoDelCache", false)) AutoDelCache()
             if (sp.getBoolean("AtDelLl2cppFolder", false)) AutoDelLl2cppFolder()
 
@@ -238,12 +237,7 @@ class Hook {
                  }
               }
 
-          //前缀不带https:或http:会闪退
           if (server.startsWith("https:") || server.startsWith("http:")) {
-          /*
-          This is a delicate API and its use requires care
-          Make sure you fully read and understand documentation of the declaration that is marked as a delicate API
-          */
             GlobalScope.launch {
                 val serverStatus = checkServerAvailability()
                 var ToastColor: Int
@@ -377,11 +371,7 @@ class Hook {
     private fun IPDialog() {
          val subject = arrayOf(
          "自定义服务器",
-         "游戏数据下载",
-         "本地服务器",
-         "YuukiPS",
-         "TomyJan",
-         "天理尝蛆",
+         "本地服务器"
          )
          var selectedSubject = subject[0]
          AlertDialog.Builder(activity).apply {
@@ -395,53 +385,9 @@ class Hook {
                      "自定义服务器" -> {
                      CustomIPDialog()
                      }
-                     "游戏数据下载" -> {
-                        sp.edit().run {
-                         putString("serverip", "https://sdk.mihoyu.cn")
-                         apply()
-                         Toast.show(activity, "已保存地址设置，请重新打开客户端~", 0, green, black)
-                           thread {
-                            Thread.sleep(2100)
-                            exitProcess(0)
-                           }
-                        }
-                     }
                      "本地服务器" -> {
                         sp.edit().run {
                          putString("serverip", "https://127.0.0.1:54321")
-                         apply()
-                         Toast.show(activity, "已保存地址设置，请重新打开客户端~", 0, green, black)
-                           thread {
-                            Thread.sleep(2100)
-                            exitProcess(0)
-                           }
-                        }
-                     }
-                     "YuukiPS" -> {
-                        sp.edit().run {
-                         putString("serverip", "https://login.yuuki.me")
-                         apply()
-                         Toast.show(activity, "已保存地址设置，请重新打开客户端~", 0, green, black)
-                           thread {
-                            Thread.sleep(2100)
-                            exitProcess(0)
-                           }
-                        }
-                     }
-                     "TomyJan" -> {
-                        sp.edit().run {
-                         putString("serverip", "https://tomyjan.com")
-                         apply()
-                         Toast.show(activity, "已保存地址设置，请重新打开客户端~", 0, green, black)
-                           thread {
-                            Thread.sleep(2100)
-                            exitProcess(0)
-                           }
-                        }
-                     }
-                     "天理尝蛆" -> {
-                        sp.edit().run {
-                         putString("serverip", "https://login.tianliserver.com")
                          apply()
                          Toast.show(activity, "已保存地址设置，请重新打开客户端~", 0, green, black)
                            thread {
@@ -471,7 +417,6 @@ class Hook {
                   setPadding(25, 0, 25, 0)
                   addView(LinearLayout(activity).apply {
                       orientation = LinearLayout.VERTICAL
-                      //提供此开关，防止误报无限连接至资源下载服务器
                       addView(Switch(activity).apply {
                           text = "游戏数据检测 (需重启)"
                           isChecked = sp.getBoolean("ResCheck", false)
@@ -596,31 +541,6 @@ class Hook {
        } catch (e: IOException) {
               Toast.show(activity, "删除il2cpp文件夹时发生错误\n" + e.toString(), 1, red, white)
               XposedBridge.log("E: 删除il2cpp失败" + e.toString())
-       }
-    }
-
-    private fun Permission_test() {
-       try {
-          val file = File("/sdcard/Android/data/${PackageName}/files/AssetBundles/blocks/test.txt")
-          val folder = File("/sdcard/Android/data/${PackageName}/files/AssetBundles")
-          val folder1 = File("/sdcard/Android/data/${PackageName}/files/AssetBundles/blocks")
-              if (!folder.exists() && !folder.isDirectory()) {
-                  folder.mkdirs()
-              }
-              if (!folder1.exists() && !folder1.isDirectory()) {
-                  folder1.mkdirs()
-              }
-              if (!file.exists()) {
-                  file.createNewFile()
-                  file.appendText("测试客户端读取/写入\n--Xuoos")
-              } else {
-                  file.delete()
-                  file.createNewFile()
-                  file.appendText("测试客户端读取/写入\n--Xuoos")
-              }
-       } catch (e: IOException) {
-              Toast.show(activity, "内存不足/无法读取游戏数据！\n" + e.toString(), 1, yellow, black)
-              XposedBridge.log("W: 测试客户端读取/写入时发生异常" + e.toString())
        }
     }
 
