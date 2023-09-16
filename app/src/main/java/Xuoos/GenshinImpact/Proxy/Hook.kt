@@ -219,7 +219,7 @@ class Hook {
 
             if (sp.getBoolean("ResCheck", true)) {
                if (SizeError == true) {
-                  server = "https://sdk.mihoyu.cn" //@咕咕 mihoyu.cn
+                  server = ""
                }
             }
         }
@@ -762,12 +762,7 @@ class Hook {
         var Xuoos = method.args[args].toString()
         val m = regex.matcher(Xuoos)
 
-        if (server == "") return
-        if (Xuoos == "") return
-        if (method.args[args] == null) return
-        if (Xuoos.startsWith("autopatchhk.yuanshen.com")) return
-        if (Xuoos.startsWith("autopatchcn.yuanshen.com")) return
-
+        if (server == "" || Xuoos == "" || method.args[args] == null) return
         for (list in more_domain) {
             for (head in arrayListOf("http://", "https://")) {
                method.args[args] = method.args[args].toString().replace(head + list, server)
